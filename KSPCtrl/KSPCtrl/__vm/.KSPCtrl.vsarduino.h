@@ -234,6 +234,7 @@ __attribute__((always_inline)) static __INLINE void __set_PRIMASK(uint32_t priMa
 
 
 #include "KSPCtrl.ino"
+#include "comms.ino"
 #include "utils.ino"
 #endif
 #endif

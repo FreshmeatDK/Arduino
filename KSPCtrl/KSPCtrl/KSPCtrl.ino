@@ -63,6 +63,14 @@
 #define NUMIC2 1
 
 //vars
+struct VesselData
+{
+	float ap;
+	float alt;
+};
+
+VesselData VData;
+
 byte second = 0, minute, hour = 0, dayOfWeek, dayOfMonth, month, year; // bytes to hold RT clock
 char key; // keypress buffer
 char cmdStr[19]; // command string to pass

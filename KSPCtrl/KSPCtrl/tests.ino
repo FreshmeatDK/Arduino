@@ -249,3 +249,10 @@ void testLED()
 
 }
 
+void testSerial()
+{
+	float intalt	= 2;
+	
+	lcd2.clear();
+	lcd2.print(VData.alt,2);
+}

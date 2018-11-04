@@ -6,12 +6,6 @@ void serialcoms()
 	byte rx_index;
 	byte structSize;
 
-	float alt = 0;
-
-	byte throttle;
-	throttle = analogRead(0) / 4;
-
-
 	structSize = sizeof(VData);
 	rx_index = 0;
 	if (Serial.available()) {
@@ -25,7 +19,8 @@ void serialcoms()
 			}
 			memcpy(&VData, buffer, structSize);
 			rx_index = 0;
-			alt = VData.alt;
+			lcd.print("Conn");
+			
 		}
 		else
 		{
@@ -34,25 +29,27 @@ void serialcoms()
 				Serial.read();
 			}
 			rx_index = 0;
-			alt = -1;
+			lcd.print("NoConn");
+			
 		}
-
+		delay(10);
 		lcd.clear();
 		lcd.setCursor(0, 0);
-		lcd.print(alt);
-		lcd.setCursor(0, 1);
-		lcd.print(VData.ap);
-		lcd.setCursor(10, 0);
-		lcd.print(throttle);
+		
+		
 
 
-		Serial.write(throttle);
-		delay(100);
+		//Serial.write((byte*)&Cpacket, sizeof(Cpacket));
+		//Serial.write(Cpacket.throttle);
+		delay(10);
 	}
-	lcd.clear();
-	lcd.setCursor(0, 0);
-	lcd.print("Waiting");
-	delay(10);
+	else
+	{
+		lcd.clear();
+		lcd.setCursor(0, 0);
+		lcd.print("Waiting");
+		delay(10);
+	}
 
 
 }

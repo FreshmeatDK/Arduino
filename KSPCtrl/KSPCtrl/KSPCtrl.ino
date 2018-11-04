@@ -63,11 +63,11 @@
 #define NUMIC2 1
 
 //vars
-struct VesselData
+typedef struct
 {
 	float ap;
 	float alt;
-};
+} VesselData;
 
 VesselData VData;
 
@@ -80,7 +80,6 @@ struct ControlPacket
 	int8_t ty;
 	int8_t tz;
 	int8_t throttle;
-
 };
 
 ControlPacket Cpacket;
@@ -114,7 +113,7 @@ Keypad keymain(makeKeymap(keys), rowPins, colPins, 5, 8);
 
 void setup()
 {
-	Serial.begin(9600);
+	Serial.begin(28800);
 
 	// Meter init
 	pinMode(CHARGE, OUTPUT);
@@ -165,10 +164,12 @@ void setup()
 // Add the main program code into the continuous loop() function
 void loop()
 {
-	testJoy();
+	Joysticks();
+	serialcoms();
 	StatusToggles();
 	printTime();
 	chkKeypad();
 	execCmd();
+	testSerial();
 }
 

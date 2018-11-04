@@ -1,260 +1,61 @@
-void testReset()
+int nPotJy(int pot, int min, int deadmin, int deadmax, int max, int low, int high)
 {
-	for (int i = 0; i < 1000; i++)
+	int retval = 0;
+	
+	if (max < min)
 	{
-		Serial.println(i);
-		delay(100);
+		pot = min - pot;
+		deadmin = min - deadmin;
+		deadmax = min - deadmax;
+		max = min - max;
+		min = 0;
 	}
 
+	if (pot < deadmin)
+	{
+		retval = low-(pot * low/(deadmin - min));
+	}
+	else if (pot > deadmax)
+	{
+		retval = (pot - deadmax)*high/(max - deadmax);
+	}
+	else
+	{
+		retval = 0;
+	}
+
+	return retval;
 }
 
-void testKeypad()
+int nPotSl(int pot, int min, int max, int dead, int low, int high)
 {
-	char key = keymain.getKey();
+	int retval = 0;
 
-	if (key != NO_KEY) {
-		Serial.println(key);
-	}
-}
-
-void testMeters()
-{
-	int thrRead;
-	thrRead = analogRead(THROTTLE) / 4;
-	Serial.println(thrRead);
-	analogWrite(CHARGE, thrRead);
-	analogWrite(MONO, thrRead);
-	analogWrite(SPEED, thrRead);
-	analogWrite(ALT, thrRead);
-}
-
-void testJoy()
-{
-	int Joy1X, Joy1Y, Joy1Z, Joy2X, Joy2Y;
-	Joy1X = analogRead(JOY1X);
-	Joy1Y = analogRead(JOY1Y);
-	Joy1Z = analogRead(JOY1Z);
-	Joy2X = analogRead(JOY2X);
-	Joy2Y = analogRead(JOY2Y);
-	Serial.print("J1X ");
-	Serial.print(Joy1X);
-	Serial.print(" J1Y ");
-	Serial.print(Joy1Y);
-	Serial.print(" J1Z ");
-	Serial.print(Joy1Z);
-	Serial.print(" J1Btn ");
-	Serial.println(digitalRead(JOY1BTN));
-	Serial.print("J2X ");
-	Serial.print(Joy2X);
-	Serial.print(" J2Y ");
-	Serial.print(Joy2Y);
-	Serial.print(" J2F ");
-	Serial.print(digitalRead(JOY2FWD));
-	Serial.print(" J2B ");
-	Serial.print(digitalRead(JOY2BCK));
-	Serial.print(" J2Btn ");
-	Serial.println(digitalRead(JOY2BTN));
-
-
-	Serial.println(analogRead(THROTTLE));
-	delay(1000);
-}
-
-void testLCD()
-{
-
-	readTime();
-	lcd2.setCursor(0, 2);
-	lcd2.print("Time: ");
-	lcd2.print(hour);
-	lcd2.print(":");
-	if (minute < 10) lcd2.print("0");
-	lcd2.print(minute);
-	lcd2.print(":");
-	if (second < 10) lcd2.print("0");
-	lcd2.print(second);
-	if ((hour > 21) && (minute > 44) || (hour > 22)) {
-		lcd2.setCursor(5, 3);
-		lcd2.print("Bedtime");
-	}
-}
-
-void readTime()
-{
-	Wire.beginTransmission(RTCADR);
-	Wire.write(0); // set DS3231 register pointer to 00h
-	Wire.endTransmission();
-	Wire.requestFrom(RTCADR, 3);
-	// request three bytes of data from DS3231 starting from register 00h
-	second = bcdToDec(Wire.read() & 0x7f);
-	minute = bcdToDec(Wire.read());
-	hour = bcdToDec(Wire.read() & 0x3f);
-	/*Serial.print(hour);
-	Serial.print(':');
-	Serial.print(minute);
-	Serial.print(':');
-	Serial.println(second);
-	Serial.println();*/
-	//dayOfWeek = bcdToDec(Wire.read());
-	//dayOfMonth = bcdToDec(Wire.read());
-	//month = bcdToDec(Wire.read());
-	//year = bcdToDec(Wire.read());
-}
-
-void killLC()
-{
-	for (int i = 0; i < NUMLC; i++)
+	if (min > max)
 	{
-		for (int j = 0; j < 8; j++)
-		{
-			lc.setChar(i, j, '.', false);
-			delay(50);
-		}
+		int tmp = min;
+		min = max;
+		max = tmp;
+		pot = max - pot;
 	}
-}
 
-void testLC()
-{
-	for (int ad = 0; ad < NUMLC; ad++)
+	if (pot < dead)
 	{
-		for (int val = 0; val < 10; val++)
-		{
-			for (int pos = 0; pos < 8; pos++)
-			{
-				lc.setDigit(ad, pos, val, false);
-				delay(50);
-				Serial.println(val);
-			}
-			delay(500);
-		}
+		retval = low;
 	}
-}
 
-void testTrim()
-{
-	int trYaw = 0, trPitch = 0, trRoll = 0, trEng = 0;
-
-	static int trYO, trPO, trRO, trEO; //previous values of read variables
-	static unsigned long timer; // time when display started
-	bool change;
-
-	trYaw = analogRead(TRIMYAW);
-	trPitch = analogRead(TRIMPITCH);
-	trRoll = analogRead(TRIMROLL);
-	trEng = analogRead(TRIMENGINE);
-
-	if ((trYaw < trYO - 7) || (trYaw > trYO + 7))
+	if (pot > max - dead)
 	{
-		trimY = ((trYaw + 15) / -5) + 100;
-		LCNum(2, trimY);
-		trYO = trYaw;
-		timer = millis();
+		retval = high;
 	}
 
-	if ((trPitch < trPO - 7) || (trPitch > trPO + 7))
+	else
 	{
-		trimP = ((trPitch + 15) / -5) + 100;
-		LCNum(2, trimP);
-		trPO = trPitch;
-		timer = millis();
+		retval = (pot - dead)*(high - low) / (max - min);
 	}
 
-	if ((trRoll < trRO - 7) || (trRoll > trRO + 7))
-	{
-		trimR = ((trRoll + 20) / -5) + 100;
-		LCNum(2, trimR);
-		trRO = trRoll;
-		timer = millis();
-	}
+	return retval;
 
-	if ((trEng < trEO - 10) || (trEng > trEO + 10))
-	{
-		trimE = constrain(map(trEng, 1010, 10, 0, 100), 0, 100);
-		LCNum(2, trimE);
-		trEO = trEng;
-		timer = millis();
-	}
-
-
-
-	if (millis() - timer > 1000)
-	{
-		lc.clearDisplay(2);
-	}
-
-	/*Serial.print("Yaw: ");
-	Serial.print(trYaw);
-	Serial.print("  Pitch: ");
-	Serial.print(trPitch);
-	Serial.print("  Roll: ");
-	Serial.print(trRoll);
-	Serial.print("  Engine: ");
-	Serial.println(trEng);
-	*/
-
-}
-
-void testPin(int p)
-{
-	digitalWrite(p, HIGH);
-	Serial.println('h');
-	delay(2000);
-
-	digitalWrite(p, LOW);
-	Serial.println('l');
-	delay(2000);
-
-}
-
-void testSPI()
-{
-	bool change = false;
-	SPI.beginTransaction(SPISettings(6000000, MSBFIRST, SPI_MODE2));
-
-
-	//Serial.println('r');
-	delay(1);
-	digitalWrite(SS1, HIGH);
-
-	for (int i = 0; i < NUMIC1; i++)
-	{
-		digitalWrite(CLKI, LOW);
-		dataIn[i] = SPI.transfer(0x00);
-		digitalWrite(CLKI, HIGH);
-
-	}
-	digitalWrite(SS1, LOW);
-	SPI.endTransaction();
-
-	SPI.beginTransaction(SPISettings(3000000, MSBFIRST, SPI_MODE2));
-
-
-	digitalWrite(SS2, LOW);
-	delay(1);
-	for (int i = NUMIC1; i < NUMIC1 + NUMIC2; i++)
-	{
-		dataIn[i] = shiftIn(DTA, CLK, MSBFIRST);
-	}
-	digitalWrite(SS2, HIGH);
-	SPI.endTransaction();
-
-	for (int i = 0; i < NUMIC1 + NUMIC2; i++)
-	{
-		if (dataIn[i] != dataOld[i])
-		{
-			change = true;
-		}
-	}
-	if (change == true)
-	{
-		//printAllBytes();
-	}
-
-	for (int i = 0; i < NUMIC1 + NUMIC2; i++)
-	{
-		dataOld[i] = dataIn[i];
-	}
-	delay(11);
 }
 
 void printByte(byte data)
@@ -279,7 +80,7 @@ void printAllBytes()
 
 }
 
-void toggles()
+void StatusToggles()
 {
 	/*Picks out the relevant toggle of the dataIn bytes and change LED accordingly*/
 	bool statusRead;
@@ -383,16 +184,6 @@ void rotSelectors()
 	Serial.print(' ');
 	Serial.print(panelMode);
 	Serial.println();
-}
-
-void testLED()
-{
-	for (int i = 0; i < NUMLEDS; i++)
-	{
-		singleLED(i);
-		delay(100);
-	}
-
 }
 
 void singleLED(int lednum)
@@ -575,7 +366,7 @@ void setTime(byte ssecond, byte sminute, byte shour, byte sdayOfWeek, byte sdayO
 void printTime()
 {
 	readTime();
-	if (hour > 22)
+	if (hour > 21)
 	{
 		if ((second % 2) == 0)
 		{
@@ -622,6 +413,28 @@ void printTime()
 		lc.setDigit(0, 1, 0, false);
 		lc.setDigit(0, 0, second, false);
 	}
+}
+
+void readTime()
+{
+	Wire.beginTransmission(RTCADR);
+	Wire.write(0); // set DS3231 register pointer to 00h
+	Wire.endTransmission();
+	Wire.requestFrom(RTCADR, 3);
+	// request three bytes of data from DS3231 starting from register 00h
+	second = bcdToDec(Wire.read() & 0x7f);
+	minute = bcdToDec(Wire.read());
+	hour = bcdToDec(Wire.read() & 0x3f);
+	/*Serial.print(hour);
+	Serial.print(':');
+	Serial.print(minute);
+	Serial.print(':');
+	Serial.println(second);
+	Serial.println();*/
+	//dayOfWeek = bcdToDec(Wire.read());
+	//dayOfMonth = bcdToDec(Wire.read());
+	//month = bcdToDec(Wire.read());
+	//year = bcdToDec(Wire.read());
 }
 
 byte decToBcd(byte val)

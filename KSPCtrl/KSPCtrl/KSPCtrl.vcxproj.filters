@@ -18,6 +18,8 @@
     <None Include="KSPCtrl.ino" />
     <None Include="utils.ino" />
     <None Include="comms.ino" />
+    <None Include="tests.ino" />
+    <None Include="controls.ino" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="__vm\.KSPCtrl.vsarduino.h">

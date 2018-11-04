@@ -71,6 +71,20 @@ struct VesselData
 
 VesselData VData;
 
+struct ControlPacket
+{
+	int8_t pitch;
+	int8_t yaw;
+	int8_t roll;
+	int8_t tx;
+	int8_t ty;
+	int8_t tz;
+	int8_t throttle;
+
+};
+
+ControlPacket Cpacket;
+
 byte second = 0, minute, hour = 0, dayOfWeek, dayOfMonth, month, year; // bytes to hold RT clock
 char key; // keypress buffer
 char cmdStr[19]; // command string to pass
@@ -151,9 +165,8 @@ void setup()
 // Add the main program code into the continuous loop() function
 void loop()
 {
-	testTrim();
-	testSPI();
-	toggles();
+	testJoy();
+	StatusToggles();
 	printTime();
 	chkKeypad();
 	execCmd();

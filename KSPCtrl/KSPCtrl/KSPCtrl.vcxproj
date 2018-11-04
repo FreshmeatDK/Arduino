@@ -80,7 +80,13 @@
     <None Include="comms.ino">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="controls.ino">
+      <FileType>CppCode</FileType>
+    </None>
     <None Include="KSPCtrl.ino">
+      <FileType>CppCode</FileType>
+    </None>
+    <None Include="tests.ino">
       <FileType>CppCode</FileType>
     </None>
     <None Include="utils.ino">

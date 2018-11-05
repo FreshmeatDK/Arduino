@@ -22,7 +22,7 @@ void serialcoms()
 			lcd.print("Conn");
 			
 		}
-		else
+		else if (rx_len > structSize)
 		{
 			while (Serial.available())
 			{
@@ -39,8 +39,8 @@ void serialcoms()
 		
 
 
-		//Serial.write((byte*)&Cpacket, sizeof(Cpacket));
-		//Serial.write(Cpacket.throttle);
+		Serial.write((byte*)&Cpacket, sizeof(Cpacket));
+		
 		delay(10);
 	}
 	else

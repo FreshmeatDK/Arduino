@@ -32,16 +32,9 @@ void serialcoms()
 			lcd.print("NoConn");
 			
 		}
-		delay(10);
-		lcd.clear();
-		lcd.setCursor(0, 0);
 		
-		
-
-
 		Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 		
-		delay(10);
 	}
 	else
 	{

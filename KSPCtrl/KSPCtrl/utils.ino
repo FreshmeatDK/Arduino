@@ -27,6 +27,7 @@ int nPotJy(int pot, int min, int deadmin, int deadmax, int max, int low, int hig
 	return retval;
 }
 
+
 int nPotSl(int pot, int min, int max, int dead, int low, int high)
 {
 	int retval = 0;
@@ -56,6 +57,25 @@ int nPotSl(int pot, int min, int max, int dead, int low, int high)
 
 	return retval;
 
+}
+
+void blackout()
+{
+	lcd.noBacklight();
+	lcd2.noBacklight();
+	lcd.clear();
+	lcd2.clear();
+
+	analogWrite(CHARGE, 0);
+	analogWrite(MONO, 0);
+	analogWrite(ALT, 0);
+	analogWrite(SPEED, 0);
+	
+	for (int i = 0; i < NUMLEDS; i++)
+	{
+		leds[i] = CRGB::Black;
+	}
+	FastLED.show();
 }
 
 void printByte(byte data)
@@ -194,7 +214,7 @@ void singleLED(int lednum)
 		if (i != lednum) leds[i] = CRGB::Black;
 	}
 	leds[lednum] = CRGB::Green;
-	FastLED.show();
+
 }
 
 void statusLED(int lednum, bool status)
@@ -302,6 +322,35 @@ void execCmd() {
 
 
 	}
+}
+
+void LCPotDisplay(int add, int16_t num, char pot)
+{
+	LCNum(add, num);
+	LCChar(add, pot);
+}
+
+void LCChar(int add, char pot)
+{
+	switch (pot)
+	{
+		case 'y':
+			lc.setRow(add, 7, B00111011);
+			break;
+		case 'r':
+			lc.setRow(add, 7, B00000101);
+			break;
+		case 'p':
+			lc.setChar(add, 7, 'P', false);
+			break;
+		case 'e':
+			lc.setChar(add, 7, 'E', false);
+			break;
+		default:
+			lc.setRow(add, 7, B01001001);
+			break;
+	}
+	
 }
 
 void LCNum(int add, int16_t num)

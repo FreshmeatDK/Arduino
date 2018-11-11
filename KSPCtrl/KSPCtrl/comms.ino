@@ -8,7 +8,10 @@ void serialcoms()
 
 	structSize = sizeof(VData);
 	rx_index = 0;
-	if (Serial.available()) {
+	if (Serial.available()) 
+	{
+		connected = true; // Sets flag and resets timeout timer
+		timeout = millis();
 
 		rx_len = Serial.available();
 		if (rx_len == structSize)
@@ -20,7 +23,7 @@ void serialcoms()
 			memcpy(&VData, buffer, structSize);
 			rx_index = 0;
 			lcd.print("Conn");
-			
+
 		}
 		else if (rx_len > structSize)
 		{
@@ -30,17 +33,22 @@ void serialcoms()
 			}
 			rx_index = 0;
 			lcd.print("NoConn");
-			
+
 		}
-		
+
+		lcd.setCursor(0, 0);
 		Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 		
 	}
 	else
 	{
+		if ((timeout - millis()) > TIMEOUT)
+		{
+			connected = false;
+		}
 		lcd.clear();
 		lcd.setCursor(0, 0);
-		lcd.print("Waiting");
+		//lcd.print("Waiting");
 		delay(10);
 	}
 

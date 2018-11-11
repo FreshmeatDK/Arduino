@@ -62,6 +62,9 @@
 #define NUMIC1 4
 #define NUMIC2 1
 
+//other defs
+#define TIMEOUT 1000
+
 //vars
 typedef struct
 {
@@ -80,6 +83,7 @@ struct ControlPacket
 	int8_t ty;
 	int8_t tz;
 	int8_t throttle;
+	uint8_t toggles[5];
 };
 
 ControlPacket Cpacket;
@@ -89,6 +93,9 @@ char key; // keypress buffer
 char cmdStr[19]; // command string to pass
 byte cmdStrIndex = 0; //current lenght of cmdStr
 int trimY, trimP, trimR, trimE;
+
+long timeout = 0; //timeout counter
+bool connected; 
 
 char keys[5][8] = {
 	{ '7', '8', '9', '-', ',', '.', 'S', 'M' },
@@ -164,12 +171,24 @@ void setup()
 // Add the main program code into the continuous loop() function
 void loop()
 {
-	Joysticks();
+	
 	serialcoms();
-	StatusToggles();
+	
+	if (connected)
+	{
+		toggles();
+		StatusToggles();
+		Joysticks();
+		chkKeypad();
+		execCmd();
+
+	}
+	else
+	{
+		blackout();
+	}
+
 	printTime();
-	chkKeypad();
-	execCmd();
-	testSerial();
+
 }
 

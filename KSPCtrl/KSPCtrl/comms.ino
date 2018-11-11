@@ -32,7 +32,7 @@ void serialcoms()
 			lcd.print("NoConn");
 			
 		}
-		
+		lcd.setCursor(0, 0);
 		Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 		
 	}

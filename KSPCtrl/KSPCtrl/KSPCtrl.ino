@@ -80,6 +80,7 @@ struct ControlPacket
 	int8_t ty;
 	int8_t tz;
 	int8_t throttle;
+	uint8_t toggles[5];
 };
 
 ControlPacket Cpacket;
@@ -166,6 +167,7 @@ void loop()
 {
 	Joysticks();
 	serialcoms();
+	toggles();
 	StatusToggles();
 	printTime();
 	chkKeypad();

@@ -37,12 +37,12 @@ void trimmers()
 	trYaw = 5 * nPotJy(analogRead(TRIMYAW), 1004, 490, 454, 4, -20, 20);
 	trPitch = 5 * nPotJy(analogRead(TRIMPITCH), 1004, 490, 454, 4, -20, 20);
 	trRoll = 5 * nPotJy(analogRead(TRIMROLL), 1002, 545, 501, 2, -20, 20);
-	trEng = 5 * (nPotSl(analogRead(TRIMENGINE), 1002, 2, 5, 0, 20));
+	trEng = 5 * (nPotSl(analogRead(TRIMENGINE), 1002, 2, 15, 0, 20));
 
 	if ((trYaw < trYO) || (trYaw > trYO))
 	{
 		trimY = trYaw;
-		LCNum(2, trimY);
+		LCPotDisplay(2, trimY,'y');
 		trYO = trYaw;
 		timer = millis();
 	}
@@ -50,7 +50,7 @@ void trimmers()
 	if ((trPitch < trPO) || (trPitch > trPO))
 	{
 		trimP = trPitch;
-		LCNum(2, trimP);
+		LCPotDisplay(2, trimP,'p');
 		trPO = trPitch;
 		timer = millis();
 	}
@@ -58,7 +58,7 @@ void trimmers()
 	if ((trRoll < trRO) || (trRoll > trRO))
 	{
 		trimR = trRoll;
-		LCNum(2, trimR);
+		LCPotDisplay(2, trimR,'r');
 		trRO = trRoll;
 		timer = millis();
 	}
@@ -66,7 +66,7 @@ void trimmers()
 	if ((trEng < trEO) || (trEng > trEO))
 	{
 		trimE = trEng;
-		LCNum(2, trimE);
+		LCPotDisplay(2, trimE,'e');
 		trEO = trEng;
 		timer = millis();
 	}
@@ -109,6 +109,11 @@ void toggles()
 	}
 	digitalWrite(SS2, HIGH);
 	SPI.endTransaction();
+
+	for (int i = 0; i < 5; i++)
+	{
+		Cpacket.toggles[i] = dataIn[i];
+	}
 
 	delay(11);
 }

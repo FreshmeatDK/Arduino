@@ -63,7 +63,7 @@
 #define NUMIC2 1
 
 //other defs
-#define TIMEOUT 1000
+#define TIMEOUT 100000
 
 //vars
 typedef struct
@@ -95,7 +95,7 @@ byte cmdStrIndex = 0; //current lenght of cmdStr
 int trimY, trimP, trimR, trimE;
 
 long timeout = 0; //timeout counter
-bool connected; 
+bool connected, displayoff; // are we connected and are we in blackout
 
 char keys[5][8] = {
 	{ '7', '8', '9', '-', ',', '.', 'S', 'M' },
@@ -109,7 +109,7 @@ byte colPins[8] = { 26, 24, 22, 30, 28, 32, 34, 36 };
 
 
 // objects
-CRGB leds[NUMLEDS]; // Array of WS2811
+CRGB leds[NUMLEDS], oldLeds[NUMLEDS]; // Array of WS2811
 byte dataIn[NUMIC1 + NUMIC2]; // Byte array of spi inputs
 byte dataOld[NUMIC1 + NUMIC2]; //testing array
 LedControl lc = LedControl(LCDATA, LCCLK, LCCS, NUMLC);
@@ -176,6 +176,7 @@ void loop()
 	
 	if (connected)
 	{
+		if (displayoff) reLight();
 		toggles();
 		StatusToggles();
 		Joysticks();

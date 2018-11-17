@@ -37,12 +37,14 @@ void serialcoms()
 		}
 
 		lcd.setCursor(0, 0);
+		Serial.write(85);
+		Serial.write(85);
 		Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 		
 	}
 	else
 	{
-		if ((timeout - millis()) > TIMEOUT)
+		if ((millis()-timeout) > TIMEOUT)
 		{
 			connected = false;
 		}

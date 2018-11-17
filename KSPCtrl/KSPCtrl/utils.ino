@@ -61,6 +61,7 @@ int nPotSl(int pot, int min, int max, int dead, int low, int high)
 
 void blackout()
 {
+	displayoff = true;
 	lcd.noBacklight();
 	lcd2.noBacklight();
 	lcd.clear();
@@ -73,7 +74,20 @@ void blackout()
 	
 	for (int i = 0; i < NUMLEDS; i++)
 	{
+		oldLeds[i] = leds[i];
 		leds[i] = CRGB::Black;
+	}
+	FastLED.show();
+}
+
+void reLight()
+{
+	displayoff = false;
+	lcd.backlight();
+	lcd2.backlight();
+	for (int i = 0; i < NUMLEDS; i++)
+	{
+		leds[i] = oldLeds[i];
 	}
 	FastLED.show();
 }

@@ -426,58 +426,6 @@ void setTime(byte ssecond, byte sminute, byte shour, byte sdayOfWeek, byte sdayO
 	Wire.endTransmission();
 }
 
-void printTime()
-{
-	readTime();
-	if (hour > 21)
-	{
-		if ((second % 2) == 0)
-		{
-			lc.setChar(0, 7, 'b', false);
-		}
-		else
-		{
-			lc.setChar(0, 7, ' ', false);
-		}
-	}
-	if (hour > 9)
-	{
-		int ones = hour % 10;
-		hour = hour / 10;
-		lc.setDigit(0, 5, hour, false);
-		lc.setDigit(0, 4, ones, true);
-	}
-	else
-	{
-		lc.setDigit(0, 5, 0, false);
-		lc.setDigit(0, 4, hour, true);
-	}
-	if (minute > 9)
-	{
-		int ones = minute % 10;
-		minute = minute / 10;
-		lc.setDigit(0, 3, minute, false);
-		lc.setDigit(0, 2, ones, true);
-	}
-	else
-	{
-		lc.setDigit(0, 3, 0, false);
-		lc.setDigit(0, 2, minute, true);
-	}
-	if (second > 9)
-	{
-		int ones = second % 10;
-		second = second / 10;
-		lc.setDigit(0, 1, second, false);
-		lc.setDigit(0, 0, ones, false);
-	}
-	else
-	{
-		lc.setDigit(0, 1, 0, false);
-		lc.setDigit(0, 0, second, false);
-	}
-}
-
 void readTime()
 {
 	Wire.beginTransmission(RTCADR);
@@ -510,4 +458,89 @@ byte bcdToDec(byte val)
 	return((val / 16 * 10) + (val % 16));
 }
 
+void charcpypos(char *in, uint8_t pos, char *out) {
+
+	// copy chars from in to out, starting at pos
+
+	for (int i = 0; i < strlen(in); i++) {
+		out[pos + i] = in[i];
+	}
+}
+
+
+void f2str(float fval, int BC, char *out) {
+
+	/*
+
+	This function converts the float in fval to a string
+	in out, containing a rounded result to BC significant
+	digits, and an SI-prefix to account for large nnumbers.
+	The function will not work generally with negative numbers,
+	nor positive values < 1
+
+	fval: value to convert to string, using prefixes
+	BC: significant digits
+	out: char array. Size at least BC+3
+
+	out will have BC+2 printing chars and a null char.
+	*/
+	uint32_t pbase = 1UL; //Will be 10^(BC+1), float must have a smalle value than this 
+						  // once we have found our prefix. Convert to float if 10^12 values are needed
+	uint32_t lval; // the value that will hold fval ASAP
+	byte deca = 0; // index variable for prefix
+	byte deci; // number of decimals
+	char prefix[] = { ' ', 'k','M','G','T' };
+
+	if (BC < 1) out = "error: BC < 1";
+
+	for (int i = 0; i < BC; i++) { //pbase = 10^antal betydende cifre
+		pbase = pbase * 10;
+	}
+
+
+	if (fval < 0) {
+
+		if (BC < 2) {
+			out[0] = 'e';
+			for (int i = 1; i < BC + 2; i++) {
+				out[i] = ' ';
+			}
+		}
+		else {
+			out[0] = 'e';
+			out[1] = 's';
+			out[2] = 'c';
+			for (int i = 3; i < BC + 2; i++) {
+				out[i] = ' ';
+			}
+		}
+
+		out[BC + 2] = '\0';
+	}
+	else {
+		while (fval > 4294967295) { // float operation as long as needed
+			fval = fval * 0.001;
+			deca++;
+		}
+		lval = fval;
+		while (lval >= pbase) {
+			lval = lval * 0.001;
+			deca++;
+		}
+
+		if (lval > pbase*0.1) deci = 0;
+		else if (lval > pbase*0.01) deci = 1;
+		else if (lval > pbase*0.001) deci = 2;
+		else deci = 3;
+
+		if (deci == 2) BC++;
+
+		dtostrf(lval, BC + 1, deci, out);
+		out[BC + 1] = ' ';
+		out[BC + 2] = prefix[deca];
+		out[BC + 3] = '\0';
+
+
+	}
+}
 

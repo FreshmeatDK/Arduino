@@ -22,7 +22,7 @@ void serialcoms()
 			}
 			memcpy(&VData, buffer, structSize);
 			rx_index = 0;
-			lcd.print("Conn");
+			//lcd.print("Conn");
 
 		}
 		else if (rx_len > structSize)
@@ -32,7 +32,7 @@ void serialcoms()
 				Serial.read();
 			}
 			rx_index = 0;
-			lcd.print("NoConn");
+			//lcd.print("NoConn");
 
 		}
 
@@ -50,7 +50,7 @@ void serialcoms()
 		}
 		lcd.clear();
 		lcd.setCursor(0, 0);
-		//lcd.print("Waiting");
+		lcd.print("Waiting");
 		delay(10);
 	}
 

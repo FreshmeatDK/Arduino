@@ -83,6 +83,9 @@
     <None Include="controls.ino">
       <FileType>CppCode</FileType>
     </None>
+    <None Include="displays.ino">
+      <FileType>CppCode</FileType>
+    </None>
     <None Include="KSPCtrl.ino">
       <FileType>CppCode</FileType>
     </None>

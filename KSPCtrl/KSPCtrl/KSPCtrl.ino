@@ -11,6 +11,7 @@
 #include <FastLED.h>
 #include <LedControl.h>
 #include <NewLiquidCrystal/LiquidCrystal_I2C.h>
+#include <avr/dtostrf.h>
 
 
 //I2C adresses
@@ -182,6 +183,7 @@ void loop()
 		Joysticks();
 		chkKeypad();
 		execCmd();
+		LCD1Rocket();
 
 	}
 	else

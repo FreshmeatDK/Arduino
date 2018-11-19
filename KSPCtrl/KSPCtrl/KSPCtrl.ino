@@ -69,8 +69,15 @@
 //vars
 typedef struct
 {
-	float ap;
-	float alt;
+	uint32_t pcount;	//packet number
+	float ap;			//apoapsis
+	float pe;			//periapsis
+	uint32_t tap;		//time to ap
+	uint32_t tpe;		//time to pe
+	float alt;			//mean altitude
+	float alts;			//surface altitude
+	float vorb;			//orbital speed
+	float vsurf;		//surface speed
 } VesselData;
 
 VesselData VData;
@@ -184,11 +191,11 @@ void loop()
 		chkKeypad();
 		execCmd();
 		LCD1Rocket();
-
+		testSerial();
 	}
 	else
 	{
-		blackout();
+		//blackout();
 	}
 
 	printTime();

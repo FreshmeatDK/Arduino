@@ -458,15 +458,18 @@ byte bcdToDec(byte val)
 	return((val / 16 * 10) + (val % 16));
 }
 
-void charcpypos(char *in, uint8_t pos, char *out) {
+void charcpypos(char *in, uint8_t len, char *out, uint8_t pos) {
 
 	// copy chars from in to out, starting at pos
 
-	for (int i = 0; i < strlen(in); i++) {
-		out[pos + i] = in[i];
+	if (strlen(in) >= len)
+	{
+		for (int i = 0; i < len + 1; i++) {
+			out[pos + i] = in[i];
+		}
 	}
-}
 
+}
 
 void f2str(float fval, int BC, char *out) {
 
@@ -536,11 +539,152 @@ void f2str(float fval, int BC, char *out) {
 		if (deci == 2) BC++;
 
 		dtostrf(lval, BC + 1, deci, out);
-		out[BC + 1] = ' ';
-		out[BC + 2] = prefix[deca];
-		out[BC + 3] = '\0';
+		out[BC + 1] = prefix[deca];
+		out[BC + 2] = '\0';
 
 
 	}
 }
 
+void time2str(uint32_t ltime, char *out) {
+	/*
+	This function formats a time to a six char format,
+	i.e. 00h00m, 0y000d, 00m00s, to get a constant amount
+	of significant digits. Breaks above 99 years. Null terminated.
+	*/
+	int ty, td, th, tm, ts;
+	char buf[5];
+
+	ty = ltime / 9203400;
+	td = (ltime % 9203400) / (21600);
+	th = (ltime % 21600) / 3600;
+	tm = (ltime % 3600) / 60;
+	ts = (ltime % 60);
+
+	if (ltime < 0) {
+		out = "esc trj";
+	}
+	else {
+		if (ty > 9) {
+			itoa(ty, buf, 10);
+			out[0] = buf[0];
+			out[1] = buf[1];
+			out[2] = 'Y';
+			out[3] = '\0';
+		}
+
+		//------------------Y:ddd---------------------
+
+		else if (ty > 0) {
+			itoa(ty, buf, 10);
+			out[0] = buf[0];
+			out[1] = 'Y';
+
+			if (td > 99) {
+				itoa(td, buf, 10);
+				out[2] = buf[0];
+				out[3] = buf[1];
+				out[4] = buf[2];
+			}
+			else if (td > 9) {
+				itoa(td, buf, 10);
+				out[2] = '0';
+				out[3] = buf[0];
+				out[4] = buf[1];
+			}
+			else {
+				itoa(td, buf, 10);
+				out[2] = '0';
+				out[3] = '0';
+				out[4] = buf[0];
+			}
+			out[5] = 'd';
+			out[6] = '\0';
+		}
+
+		//---------------------ddd:h----------------
+
+		else if (td > 0) {
+			if (td > 99) {
+				itoa(td, buf, 10);
+				out[0] = buf[0];
+				out[1] = buf[1];
+				out[2] = buf[2];
+			}
+			else if (td > 9) {
+				itoa(td, buf, 10);
+				out[0] = '0';
+				out[1] = buf[0];
+				out[2] = buf[1];
+			}
+			else {
+				itoa(td, buf, 10);
+				out[0] = '0';
+				out[1] = '0';
+				out[2] = buf[0];
+			}
+			out[3] = 'D';
+			itoa(th, buf, 10);
+			out[4] = buf[0];
+			out[5] = 'h';
+			out[6] = '\0';
+
+		}
+		//---------------------------hh:mm-----------------    
+		else if (th > 0) {
+			if (th > 9) {
+				itoa(th, buf, 10);
+				out[0] = buf[0];
+				out[1] = buf[1];
+			}
+			else {
+				itoa(th, buf, 10);
+				out[0] = '0';
+				out[1] = buf[0];
+			}
+			out[2] = 'h';
+			if (tm > 9) {
+				itoa(tm, buf, 10);
+				out[3] = buf[0];
+				out[4] = buf[1];
+			}
+			else {
+				itoa(tm, buf, 10);
+				out[3] = '0';
+				out[4] = buf[0];
+			}
+			out[5] = 'm';
+			out[6] = '\0';
+		}
+
+		//--------------------mm:ss---------
+
+		else {
+			if (tm > 9) {
+				itoa(tm, buf, 10);
+				out[0] = buf[0];
+				out[1] = buf[1];
+			}
+			else {
+				itoa(tm, buf, 10);
+				out[0] = '0';
+				out[1] = buf[0];
+			}
+			out[2] = 'm';
+			if (ts > 9) {
+				itoa(ts, buf, 10);
+				out[3] = buf[0];
+				out[4] = buf[1];
+			}
+			else {
+				itoa(ts, buf, 10);
+				out[3] = '0';
+				out[4] = buf[0];
+			}
+			out[5] = 's';
+			out[6] = '\0';
+		}
+
+	}
+
+}

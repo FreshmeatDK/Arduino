@@ -56,10 +56,25 @@ void LCD1Rocket()
 	char lcd1out[81]; //char buffer to send to display 1
 	char pstr[8]; //temp string for f2str
 
-	charcpypos("AP: ", 0, lcd1out);
-	f2str(VData.ap, 3, pstr);
-	charcpypos(pstr, 4, lcd1out);
+	charcpypos("AP ", 3, lcd1out, 0);
+	f2str(VData.ap, 4, pstr);
+	charcpypos(pstr, 6, lcd1out, 3);
+	charcpypos("m T", 3, lcd1out, 9);
+	
+	if (VData.tap > VData.tpe)
+	{
+		charcpypos("p ", 2, lcd1out, 12);
+		time2str(VData.tpe, pstr);
+		charcpypos(pstr, 7, lcd1out, 14);
+	}
+	else
+	{
+		charcpypos("a ", 2, lcd1out, 12);
+		time2str(VData.tap, pstr);
+		charcpypos(pstr, 7, lcd1out, 14);
+	}
 
 	lcd.setCursor(0, 0);
 	lcd.print(lcd1out);
 }
+

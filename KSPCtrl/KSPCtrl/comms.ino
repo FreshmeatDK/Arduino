@@ -2,44 +2,42 @@ void serialcoms()
 {
 	byte buffer[256];
 
+	byte chk1, chk2;
 	byte rx_len;
 	byte rx_index;
 	byte structSize;
 
 	structSize = sizeof(VData);
 	rx_index = 0;
-	if (Serial.available()) 
+	if (Serial.available() > 3) 
 	{
 		connected = true; // Sets flag and resets timeout timer
 		timeout = millis();
 
-		rx_len = Serial.available();
-		if (rx_len == structSize)
+		chk1 = Serial.read();
+		chk2 = Serial.read();
+		if (chk1 == 0x55)
 		{
-			while (Serial.available()) {
-				buffer[rx_index] = Serial.read();
-				rx_index++;
-			}
-			memcpy(&VData, buffer, structSize);
-			rx_index = 0;
-			//lcd.print("Conn");
-
-		}
-		else if (rx_len > structSize)
-		{
-			while (Serial.available())
+			if (chk2 == 0x55)
 			{
-				Serial.read();
+				rx_len = Serial.available();
+				if (rx_len >= structSize)
+				{
+					while (Serial.available()) {
+						buffer[rx_index] = Serial.read();
+						rx_index++;
+					}
+
+
+					memcpy(&VData, buffer, structSize);
+					rx_index = 0;
+					//lcd.print("Conn");
+
+				}
 			}
-			rx_index = 0;
-			//lcd.print("NoConn");
-
 		}
+		
 
-		lcd.setCursor(0, 0);
-		Serial.write(85);
-		Serial.write(85);
-		Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 		
 	}
 	else
@@ -54,5 +52,7 @@ void serialcoms()
 		delay(10);
 	}
 
-
+	Serial.write(85);
+	Serial.write(85);
+	Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 }

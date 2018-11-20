@@ -18,8 +18,8 @@ void serialcoms()
 		
 		if (chk1 == 0x55)
 		{
-			chk2 = Serial.read();
-			if (chk2 == 0x55)
+			//chk2 = Serial.read();
+			if (chk1 == 0x55)
 			{
 				rx_len = Serial.available();
 				if (rx_len >= structSize)
@@ -53,7 +53,7 @@ void serialcoms()
 		delay(10);
 	}
 
-	Serial.write(85);
+	//Serial.write(85);
 	Serial.write(85);
 	Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 }

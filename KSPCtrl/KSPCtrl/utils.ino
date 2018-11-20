@@ -460,7 +460,7 @@ byte bcdToDec(byte val)
 
 void charcpypos(char *in, uint8_t len, char *out, uint8_t pos) {
 
-	// copy chars from in to out, starting at pos
+	// copy len chars from in to out, starting at pos
 
 	if (strlen(in) >= len)
 	{
@@ -489,7 +489,7 @@ void f2str(float fval, int BC, char *out) {
 	*/
 	uint32_t pbase = 1UL; //Will be 10^(BC+1), float must have a smalle value than this 
 						  // once we have found our prefix. Convert to float if 10^12 values are needed
-	uint32_t lval; // the value that will hold fval ASAP
+	
 	byte deca = 0; // index variable for prefix
 	byte deci; // number of decimals
 	char prefix[] = { ' ', 'k','M','G','T' };
@@ -525,20 +525,20 @@ void f2str(float fval, int BC, char *out) {
 			fval = fval * 0.001;
 			deca++;
 		}
-		lval = fval;
-		while (lval >= pbase) {
-			lval = lval * 0.001;
+		
+		while (fval >= pbase) {
+			fval = fval * 0.001;
 			deca++;
 		}
 
-		if (lval > pbase*0.1) deci = 0;
-		else if (lval > pbase*0.01) deci = 1;
-		else if (lval > pbase*0.001) deci = 2;
+		if (fval > pbase*0.1) deci = 0;
+		else if (fval > pbase*0.01) deci = 1;
+		else if (fval > pbase*0.001) deci = 2;
 		else deci = 3;
 
 		if (deci == 2) BC++;
 
-		dtostrf(lval, BC + 1, deci, out);
+		dtostrf(fval, BC + 1, deci, out);
 		out[BC + 1] = prefix[deca];
 		out[BC + 2] = '\0';
 

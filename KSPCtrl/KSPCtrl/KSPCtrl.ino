@@ -199,7 +199,7 @@ void loop()
 	{
 		//blackout();
 	}
-
+	
 	printTime();
 
 }

@@ -13,11 +13,12 @@ void serialcoms()
 	{
 		connected = true; // Sets flag and resets timeout timer
 		timeout = millis();
-
+		bufferlenght = Serial.available();
 		chk1 = Serial.read();
-		chk2 = Serial.read();
+		
 		if (chk1 == 0x55)
 		{
+			chk2 = Serial.read();
 			if (chk2 == 0x55)
 			{
 				rx_len = Serial.available();
@@ -31,7 +32,7 @@ void serialcoms()
 
 					memcpy(&VData, buffer, structSize);
 					rx_index = 0;
-					//lcd.print("Conn");
+					lcd.print("Conn");
 
 				}
 			}
@@ -55,4 +56,9 @@ void serialcoms()
 	Serial.write(85);
 	Serial.write(85);
 	Serial.write((byte*)&Cpacket, sizeof(Cpacket));
+}
+
+void sendmsg()
+{
+	//
 }

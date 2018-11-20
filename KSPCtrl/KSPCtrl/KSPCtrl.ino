@@ -5,14 +5,15 @@
 */
 
 
+
+#include <Key.h>
 #include <Keypad.h>
 #include <Wire.h>
 #include <SPI.h>
 #include <FastLED.h>
 #include <LedControl.h>
 #include <NewLiquidCrystal/LiquidCrystal_I2C.h>
-#include <avr/dtostrf.h>
-
+#include <avr\dtostrf.h>
 
 //I2C adresses
 #define RTCADR 0x68
@@ -64,7 +65,7 @@
 #define NUMIC2 1
 
 //other defs
-#define TIMEOUT 100000
+#define TIMEOUT 10000
 
 //vars
 typedef struct
@@ -96,6 +97,7 @@ struct ControlPacket
 
 ControlPacket Cpacket;
 
+
 byte second = 0, minute, hour = 0, dayOfWeek, dayOfMonth, month, year; // bytes to hold RT clock
 char key; // keypress buffer
 char cmdStr[19]; // command string to pass
@@ -104,6 +106,8 @@ int trimY, trimP, trimR, trimE;
 
 long timeout = 0; //timeout counter
 bool connected, displayoff; // are we connected and are we in blackout
+
+int bufferlenght;
 
 char keys[5][8] = {
 	{ '7', '8', '9', '-', ',', '.', 'S', 'M' },
@@ -128,8 +132,8 @@ Keypad keymain(makeKeymap(keys), rowPins, colPins, 5, 8);
 
 void setup()
 {
-	Serial.begin(28800);
 
+	Serial.begin(28800);
 	// Meter init
 	pinMode(CHARGE, OUTPUT);
 	analogWrite(CHARGE, 0);
@@ -179,9 +183,7 @@ void setup()
 // Add the main program code into the continuous loop() function
 void loop()
 {
-	
 	serialcoms();
-	
 	if (connected)
 	{
 		if (displayoff) reLight();

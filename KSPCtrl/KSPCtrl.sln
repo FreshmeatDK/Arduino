@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KSPCtrl", "KSPCtrl\KSPCtrl.vcxproj", "{C5F80730-F44F-4478-BDAE-6634EFC2CA88}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kRPC", "..\..\..\..\Documents\Arduino\libraries\kRPC\kRPC.vcxitems", "{D25A1848-97FA-4451-B238-CD7E6E812B45}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Keypad", "..\..\..\..\Documents\Arduino\libraries\Keypad\Keypad.vcxitems", "{EEABCAA7-BC0D-4706-B041-587B2F21F308}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

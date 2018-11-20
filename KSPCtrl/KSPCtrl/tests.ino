@@ -262,3 +262,17 @@ void testSerial()
 	lcd2.setCursor(10, 1);
 	lcd2.print(VData.pcount);
 }
+
+void testkRPC()
+{
+	float intalt = 2;
+
+	lcd2.clear();
+	lcd2.print(VData.ap);
+	lcd2.setCursor(10, 0);
+	lcd2.print(VData.pe);
+	lcd2.setCursor(0, 1);
+	lcd2.print(VData.tap);
+	lcd2.setCursor(10, 1);
+	lcd2.print(VData.pcount);
+}

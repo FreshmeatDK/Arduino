@@ -58,7 +58,7 @@ void LCD1Rocket()
 
 	charcpypos("AP ", 3, lcd1out, 0);
 	f2str(VData.ap, 4, pstr);
-	charcpypos(pstr, 6, lcd1out, 3);
+	charcpypos(pstr, 6, lcd1out, 2);
 	charcpypos("m T", 3, lcd1out, 10);
 	
 	if (VData.tap > VData.tpe)

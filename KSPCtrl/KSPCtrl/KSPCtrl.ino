@@ -197,7 +197,7 @@ void loop()
 	}
 	else
 	{
-		//blackout();
+		blackout();
 	}
 	
 	printTime();

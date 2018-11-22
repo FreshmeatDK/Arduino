@@ -18,24 +18,23 @@ void serialcoms()
 		
 		if (chk1 == 0x55)
 		{
-			//chk2 = Serial.read();
-			if (chk1 == 0x55)
+			
+			
+			rx_len = Serial.available();
+			if (rx_len >= structSize)
 			{
-				rx_len = Serial.available();
-				if (rx_len >= structSize)
-				{
-					while (Serial.available()) {
-						buffer[rx_index] = Serial.read();
-						rx_index++;
-					}
-
-
-					memcpy(&VData, buffer, structSize);
-					rx_index = 0;
-					lcd.print("Conn");
-
+				while (Serial.available()) {
+					buffer[rx_index] = Serial.read();
+					rx_index++;
 				}
+
+
+				memcpy(&VData, buffer, structSize);
+				rx_index = 0;
+				
+
 			}
+			
 		}
 		
 
@@ -53,7 +52,7 @@ void serialcoms()
 		delay(10);
 	}
 
-	//Serial.write(85);
+
 	Serial.write(85);
 	Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 }

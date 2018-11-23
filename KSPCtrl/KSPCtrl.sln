@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kRPC", "..\..\..\..\Documen
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Keypad", "..\..\..\..\Documents\Arduino\libraries\Keypad\Keypad.vcxitems", "{EEABCAA7-BC0D-4706-B041-587B2F21F308}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Joystick", "..\..\..\..\Documents\Arduino\libraries\Joystick\Joystick.vcxitems", "{C6D25D83-BE1B-4C59-93B9-43C7B24E5DFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86

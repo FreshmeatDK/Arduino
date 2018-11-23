@@ -6,6 +6,7 @@
 
 
 
+#include <Joystick.h>
 #include <Key.h>
 #include <Keypad.h>
 #include <Wire.h>
@@ -14,6 +15,7 @@
 #include <LedControl.h>
 #include <NewLiquidCrystal/LiquidCrystal_I2C.h>
 #include <avr\dtostrf.h>
+
 
 //I2C adresses
 #define RTCADR 0x68
@@ -96,7 +98,6 @@ struct ControlPacket
 };
 
 ControlPacket Cpacket;
-
 
 byte second = 0, minute, hour = 0, dayOfWeek, dayOfMonth, month, year; // bytes to hold RT clock
 char key; // keypress buffer
@@ -184,6 +185,8 @@ void setup()
 void loop()
 {
 	serialcoms();
+	//connected = true;
+
 	if (connected)
 	{
 		if (displayoff) reLight();

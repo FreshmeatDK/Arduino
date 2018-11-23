@@ -57,7 +57,3 @@ void serialcoms()
 	Serial.write((byte*)&Cpacket, sizeof(Cpacket));
 }
 
-void sendmsg()
-{
-	//
-}
